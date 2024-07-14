@@ -1,0 +1,95 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "langchain-mathblackbox"
+version = "0.1"
+authors = [
+  {name = "Billy Vinning"}
+]
+dynamic = ["readme"]
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest==8.2.0"]
+dev = ["langchain-mathblackbox[test]", "pre-commit"]
+
+[project.scripts]
+langchain-mathblackbox = "langchain_mathblackbox.cli:cli"
+
+[tool.setuptools.dynamic]
+readme = {file = "README.md"}
+
+[tool.setuptools.packages.find]
+exclude = []
+
+[tool.ruff.lint]
+ignore = [
+  "PLR0913",
+  "FA102",
+  "D301",
+  "ANN",
+  "S",
+  "FA",
+  "SLF001",
+  "PLR0915",
+  "PD901",
+  "T201",
+  "C901",
+  "PERF203",
+  "B017",
+  "PT011",
+  "ERA001",
+  "PLR0912"
+]
+select = ["ALL"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"langchain_mathblackbox/tests/*" = ["D"]
+
+[tool.mypy]
+plugins = ["numpy.typing.mypy_plugin", "pydantic.mypy"]
+pretty = true
+warn_unused_configs = true
+# disallow_any_generics = true
+# disallow_subclassing_any = true
+# disallow_untyped_calls = true
+# disallow_untyped_defs = true
+# disallow_incomplete_defs = true
+check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = []
+ignore_missing_imports = true
+disallow_untyped_defs = false
+
+[tool.nbqa.addopts]
+ruff = [
+  "--extend-ignore=E402",
+  "--extend-ignore=INP001",
+  "--extend-ignore=B018",
+  "--extend-ignore=E501"
+]
+mypy = ["--install-types", "--non-interactive"]
+
+[tool.interrogate]
+ignore-overloaded-functions = true
+fail-under = 90
+exclude = ["setup.py", "docs", "build", "langchain_mathblackbox/tests", "langchain_mathblackbox/cli"]
+verbose = 2
+color = true
+generate-badge = ".github/interrogate-badge.svg"
+badge-format = "svg"
+badge-style = "flat"
+
+[tool.coverage.report]
+omit = ["langchain_mathblackbox/tests/**", "langchain_mathblackbox/cli/**"]
+exclude_lines = [
+  "pragma: not covered",
+  "@overload",
+  "class .*\\bProtocol\\):"
+]
